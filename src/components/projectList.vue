@@ -202,6 +202,12 @@
         this.recruit = opt[2];
         this.doCount();
         this.getProjects();
+        // 刷新分页
+        this.paginationShow = false;
+        this.handleCurrentChange(1);
+        this.$nextTick(function () {
+          this.paginationShow = true
+        })
       });
     },
     beforeDestroy() { // 清除监听
