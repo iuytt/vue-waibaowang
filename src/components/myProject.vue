@@ -23,7 +23,7 @@
     <el-divider></el-divider>
     <div class="projects" v-if="count!=0">
       <div :key="index" class="project"
-           v-for="(p,index) in projects.slice((currentPage-1)*5, (currentPage-1)*5+pageSize)">
+           v-for="(p,index) in projects.slice((currentPage-1)*pageSize, (currentPage-1)*pageSize+pageSize)">
         <div class="text">
           <div class="title">
             <router-link :to="{path:'/project',query: {projectId: p.projectId}}" target="_blank">
@@ -155,6 +155,14 @@
       }
     },
     methods: {
+      refresh() { // 分页刷新
+        // 刷新分页
+        this.paginationShow = false;
+        this.handleCurrentChange(1);
+        this.$nextTick(function () {
+          this.paginationShow = true
+        })
+      },
       getProjects() { // 获取参与项目
         let _this = this;
         axios.get('/getMyProjects/'
@@ -186,9 +194,11 @@
       },
       changeOpt() { // 改变选项重新获取项目
         this.getProjects();
+        this.refresh();
       },
       search() { // 搜索指定名称的项目
         this.getProjects();
+        this.refresh();
       },
       getTimeDate(date) { // 计算项目发布至今时间
         let dat = date;
@@ -234,6 +244,7 @@
       handleCurrentChange(curPage) { // 分页选页
         this.currentPage = curPage;
         // this.getProjects();
+
       },
       complete(projectId) { // 项目完成 更新项目状态
         let _this = this;
